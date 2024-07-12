@@ -7,7 +7,6 @@
           <v-img
             src="@/assets/whusym.png"
             class="logo"
-            @click="handleImageClick"
           ></v-img>
           <v-card-title>用户登录</v-card-title>
           <v-card-text>
@@ -29,6 +28,7 @@
                 :type="showPassword ? 'text' : 'password'"
                 label="密码"
                 required
+                :error-messages="passwordErrors"
               ></v-text-field>
               <v-btn @click="togglePasswordVisibility" color="white" text>
                 {{ showPassword ? '隐藏密码' : '显示密码' }}
@@ -47,14 +47,19 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { VSnackbar } from 'vuetify/lib';
+
 export default {
   data() {
     return {
       phone: '',
       password: '',
       showPassword: false,
-      clickCount: 0,
       phoneErrors: [],
+      passwordErrors: [],
+      snackbar: false,
+      snackbarMessage: '',
       rules: {
         phone: value => {
           const phoneRegex = /^[0-9]{11}$/;
@@ -64,42 +69,80 @@ export default {
     };
   },
   methods: {
-    login(userType) {
-      // 验证手机号输入不为空
-      if (this.phone.trim() === '') {
-        this.phoneErrors = ['手机号不能为空'];
+    async login(userType) {
+      this.clearErrors();
+
+      if (!this.isFormValid()) {
         return;
       }
 
-      // 发送用户类型
-      this.$emit('usertype', userType);
-      // 在实际应用中，可以在这里处理登录逻辑
-      console.log('User type:', userType);
+      const loginData = {
+        phone_num: this.phone,
+        code: this.password,
+        logging_status: 1 // 设置登录状态为1
+      };
+
+      try {
+        const response = await axios.post('/api/login', loginData);
+        if (response.data.message === "usersuccess") {
+          // 设置管理员标识
+          localStorage.setItem('logging_status', 1);
+          localStorage.setItem('if_manager', false);
+          // 重定向到 DisplayAll.vue 页面
+          this.$router.push('/displayall');
+        } else if (response.data.message === "NotExist") {
+          this.showSnackbar('该手机号未注册');
+        } else if (response.data.message === "NoMatch") {
+          this.showSnackbar('密码错误');
+        } else {
+          // 处理其他登录失败的情况
+          this.showSnackbar('登录失败');
+        }
+      } catch (error) {
+        console.error('登录请求失败:', error);
+        this.showSnackbar('登录请求失败');
+      }
     },
     goToRegister() {
       this.$router.push('/register');
     },
-    handleImageClick() {
-      this.clickCount++;
-      if (this.clickCount === 12) {
-        this.$router.push('/admin-login');
-        this.clickCount = 0; // 重置点击计数
-      }
-    },
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
+    },
+    clearErrors() {
+      this.phoneErrors = [];
+      this.passwordErrors = [];
+    },
+    isFormValid() {
+      let isValid = true;
+
+      if (this.phone.trim() === '') {
+        this.phoneErrors.push('手机号不能为空');
+        isValid = false;
+      }
+
+      if (this.password.trim() === '') {
+        this.passwordErrors.push('密码不能为空');
+        isValid = false;
+      }
+
+      return isValid;
+    },
+    showSnackbar(message) {
+      this.snackbarMessage = message;
+      this.snackbar = true;
     }
   },
   watch: {
-    clickCount(newCount) {
-      if (newCount > 12) {
-        this.clickCount = 0; // 重置点击计数
-      }
-    },
     phone() {
-      // 清除错误提示
       this.phoneErrors = [];
+    },
+    password() {
+      this.passwordErrors = [];
     }
+  },
+  components: {
+    VSnackbar
   }
 };
 </script>
@@ -128,3 +171,4 @@ v-spacer {
   color: black !important; /* 设置眼睛图标为黑色 */
 }
 </style>
+

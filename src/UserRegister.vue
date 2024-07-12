@@ -13,14 +13,14 @@
           <v-card-text>
             <v-form>
               <v-text-field
-                v-model="nickname"
+                v-model="name"
                 label="昵称"
                 required
                 :counter="20"
                 maxlength="20"
               ></v-text-field>
               <v-text-field
-                v-model="phonenum"
+                v-model="phone_num"
                 label="手机号"
                 required
                 @keypress="onlyNumber"
@@ -30,7 +30,7 @@
                 :error-messages="phoneErrors"
               ></v-text-field>
               <v-text-field
-                v-model="password"
+                v-model="code"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 @click:append="togglePasswordVisibility"
                 :type="showPassword ? 'text' : 'password'"
@@ -56,12 +56,14 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      nickname: '',
-      password: '',
-      phonenum: '',
+      name: '',
+      code: '',
+      phone_num: '',
       showPassword: false,
       phoneErrors: [],
       rules: {
@@ -73,15 +75,33 @@ export default {
     };
   },
   methods: {
-    register() {
-      // 验证手机号输入不为空
-      if (this.phonenum.trim() === '') {
-        this.phoneErrors = ['手机号不能为空'];
+    async register() {
+      this.clearErrors();
+
+      if (!this.isFormValid()) {
         return;
       }
-      
-      // 在这里处理注册逻辑
-      console.log('Registering user with phone:', this.phonenum);
+
+      const registerData = {
+        name: this.name,
+        code: this.code,
+        phone_num: this.phone_num,
+        logging_status: 1, // 设置登录状态为1
+        if_manager: false // 默认管理员标识为 false
+      };
+
+      try {
+        const response = await axios.post('/api/register', registerData);
+        if (response.data.success === true) {
+          // 重定向到 DisplayAll.vue 页面
+          this.$router.push('/displayall');
+        } else {
+          // 处理注册失败的情况
+          console.log('注册失败:', response.data.message);
+        }
+      } catch (error) {
+        console.error('注册请求失败:', error);
+      }
     },
     goToLogin() {
       this.$router.push('/login');
@@ -98,10 +118,33 @@ export default {
     },
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
+    },
+    clearErrors() {
+      this.phoneErrors = [];
+    },
+    isFormValid() {
+      let isValid = true;
+
+      if (this.phone_num.trim() === '') {
+        this.phoneErrors.push('手机号不能为空');
+        isValid = false;
+      }
+
+      if (this.code.trim() === '') {
+        this.phoneErrors.push('密码不能为空');
+        isValid = false;
+      }
+
+      if (this.name.trim() === '') {
+        this.phoneErrors.push('昵称不能为空');
+        isValid = false;
+      }
+
+      return isValid;
     }
   },
   watch: {
-    phonenum() {
+    phone_num() {
       // 清除错误提示
       this.phoneErrors = [];
     }
@@ -133,3 +176,4 @@ v-spacer {
   color: black !important; /* 设置眼睛图标为黑色 */
 }
 </style>
+
