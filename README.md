@@ -1,29 +1,7 @@
-# vue-base
-
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+实现了主页面的基本交互
+点击用户进入个人主页
+点击搜索根据输入的汉字进行检索（输入“珞”可检索出珞珈山），
+后点击检索到的标签即可进入景点详情页
+点击地图上的景点标签，直接进入景点详情页
+个人主页和景点详情页的内容待完善
+暂时没有解决地图页面在手机端小屏幕显示不全的问题
