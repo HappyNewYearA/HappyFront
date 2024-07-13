@@ -1,3 +1,4 @@
+
 <template>
   <v-container>
     <v-row class="d-flex justify-center">
@@ -34,9 +35,11 @@
                 {{ showPassword ? '隐藏密码' : '显示密码' }}
               </v-btn>
               <div class="button-container">
-                <v-btn @click="login(0)" color="primary" dark>登录</v-btn>
-                <v-spacer></v-spacer>
                 <v-btn @click="goToRegister" color="secondary" dark>注册</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn @click="login(0)" color="primary" dark>登录</v-btn>
+               
+                
               </div>
             </v-form>
           </v-card-text>
@@ -47,8 +50,8 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { VSnackbar } from 'vuetify/lib';
+// import axios from 'axios';
+// import { VSnackbar } from 'vuetify/lib';
 
 export default {
   data() {
@@ -69,6 +72,7 @@ export default {
     };
   },
   methods: {
+    /*
     async login(userType) {
       this.clearErrors();
 
@@ -81,7 +85,7 @@ export default {
         code: this.password,
         logging_status: 1 // 设置登录状态为1
       };
-
+    
       try {
         const response = await axios.post('/api/login', loginData);
         if (response.data.message === "usersuccess") {
@@ -103,6 +107,7 @@ export default {
         this.showSnackbar('登录请求失败');
       }
     },
+    */
     goToRegister() {
       this.$router.push('/register');
     },
@@ -142,7 +147,7 @@ export default {
     }
   },
   components: {
-    VSnackbar
+    // VSnackbar
   }
 };
 </script>

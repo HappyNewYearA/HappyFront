@@ -43,9 +43,11 @@
                 {{ showPassword ? '隐藏密码' : '显示密码' }}
               </v-btn>
               <div class="button-container">
-                <v-btn @click="register" color="primary" dark>注册</v-btn>
-                <v-spacer></v-spacer>
                 <v-btn @click="goToLogin" color="secondary" dark>返回登录</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn @click="register" color="primary" dark>注册</v-btn>
+                
+                
               </div>
             </v-form>
           </v-card-text>
