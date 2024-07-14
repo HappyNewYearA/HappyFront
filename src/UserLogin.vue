@@ -76,14 +76,14 @@ export default {
         return;
       }
 
-      const loginData = {
+      const params = {
         phone_num: this.phone,
         code: this.password,
         logging_status: 1 // 设置登录状态为1
       };
 
       try {
-        const response = await axios.post('/api/login', loginData);
+        const response = await axios.get('/api/login', { params });
         if (response.data.message === "usersuccess") {
           // 设置管理员标识
           localStorage.setItem('logging_status', 1);
@@ -171,4 +171,3 @@ v-spacer {
   color: black !important; /* 设置眼睛图标为黑色 */
 }
 </style>
-
