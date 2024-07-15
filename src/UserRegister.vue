@@ -31,7 +31,7 @@
               ></v-text-field>
               <v-text-field
                 v-model="code"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                 @click:append="togglePasswordVisibility"
                 :type="showPassword ? 'text' : 'password'"
                 label="密码"
@@ -39,9 +39,7 @@
                 :counter="20"
                 maxlength="20"
               ></v-text-field>
-              <v-btn @click="togglePasswordVisibility" color="white" text>
-                {{ showPassword ? '隐藏密码' : '显示密码' }}
-              </v-btn>
+
               <div class="button-container">
                 <v-btn @click="goToLogin" color="secondary" dark>返回登录</v-btn>
                 <v-spacer></v-spacer>
@@ -59,6 +57,7 @@
 
 <script>
 import axios from 'axios';
+import '@mdi/font/css/materialdesignicons.min.css';
 
 export default {
   data() {
@@ -94,7 +93,7 @@ export default {
 
       try {
         const response = await axios.post('/api/register', registerData);
-        if (response.data.success === true) {
+        if (response.data.success) {
           // 重定向到 DisplayAll.vue 页面
           this.$router.push('/displayall');
         } else {
@@ -178,4 +177,3 @@ v-spacer {
   color: black !important; /* 设置眼睛图标为黑色 */
 }
 </style>
-

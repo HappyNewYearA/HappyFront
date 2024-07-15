@@ -23,7 +23,7 @@
               ></v-text-field>
               <v-text-field
                 v-model="password"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                 @click:append="togglePasswordVisibility"
                 :append-icon-cb="togglePasswordVisibility"
                 :type="showPassword ? 'text' : 'password'"
@@ -31,9 +31,7 @@
                 required
                 :error-messages="passwordErrors"
               ></v-text-field>
-              <v-btn @click="togglePasswordVisibility" color="white" text>
-                {{ showPassword ? '隐藏密码' : '显示密码' }}
-              </v-btn>
+
               <div class="button-container">
                 <v-btn @click="goToRegister" color="secondary" dark>注册</v-btn>
                 <v-spacer></v-spacer>
@@ -50,8 +48,9 @@
 </template>
 
 <script>
-// import axios from 'axios';
-// import { VSnackbar } from 'vuetify/lib';
+import axios from 'axios';
+import { VSnackbar } from 'vuetify/lib/components/VSnackbar';
+import '@mdi/font/css/materialdesignicons.min.css';
 
 export default {
   data() {
@@ -80,14 +79,14 @@ export default {
         return;
       }
 
-      const loginData = {
+      const params = {
         phone_num: this.phone,
         code: this.password,
         logging_status: 1 // 设置登录状态为1
       };
     
       try {
-        const response = await axios.post('/api/login', loginData);
+        const response = await axios.get('/api/login', { params });
         if (response.data.message === "usersuccess") {
           // 设置管理员标识
           localStorage.setItem('logging_status', 1);
@@ -176,4 +175,3 @@ v-spacer {
   color: black !important; /* 设置眼睛图标为黑色 */
 }
 </style>
-
