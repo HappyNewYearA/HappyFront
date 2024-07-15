@@ -1,19 +1,13 @@
 <template>
-  <v-container>
+  <v-container class="admin-login-container">
     <v-row class="d-flex justify-center">
       <v-col cols="12" md="6">
         <v-card>
-          <!-- 添加校徽图片 -->
-          <v-img
-            src="@/assets/whusym.png"
-            class="logo"
-            @click="handleImageClick"
-          ></v-img>
-          <v-card-title>用户注册</v-card-title>
+          <v-card-title>管理员登录</v-card-title>
           <v-card-text>
             <v-form>
               <v-text-field
-                v-model="phone_num"
+                v-model="phone"
                 label="手机号"
                 required
                 @keypress="onlyNumber"
@@ -23,24 +17,21 @@
                 :error-messages="phoneErrors"
               ></v-text-field>
               <v-text-field
-                v-model="code"
+                v-model="password"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 @click:append="togglePasswordVisibility"
-                :append-icon-cb="togglePasswordVisibility"
                 :type="showPassword ? 'text' : 'password'"
                 label="密码"
                 required
-                :counter="20"
-                maxlength="20"
                 :error-messages="passwordErrors"
               ></v-text-field>
               <v-btn @click="togglePasswordVisibility" color="white" text>
                 {{ showPassword ? '隐藏密码' : '显示密码' }}
               </v-btn>
               <div class="button-container">
-                <v-btn @click="register" color="primary" dark>注册</v-btn>
+                <v-btn @click="login" color="primary" dark>登录</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn @click="goToLogin" color="secondary" dark>返回登录</v-btn>
+                <v-btn @click="goToUserLogin" color="secondary" dark>返回用户登录</v-btn>
               </div>
             </v-form>
           </v-card-text>
@@ -52,16 +43,18 @@
 
 <script>
 import axios from 'axios';
+import { VSnackbar } from 'vuetify/lib';
 
 export default {
   data() {
     return {
-      phone_num: '',
-      code: '',
+      phone: '',
+      password: '',
       showPassword: false,
-      clickCount: 0,
       phoneErrors: [],
       passwordErrors: [],
+      snackbar: false,
+      snackbarMessage: '',
       rules: {
         phone: value => {
           const phoneRegex = /^[0-9]{11}$/;
@@ -71,56 +64,51 @@ export default {
     };
   },
   methods: {
-    async register() {
+    async login() {
       this.clearErrors();
-      
+
       if (!this.isFormValid()) {
         return;
       }
-      
-      const registrationData = {
-        phone_num: this.phone_num,
-        code: this.code
+
+      const loginData = {
+        phone_num: this.phone,
+        password: this.password,
+        user_type: 1 // 管理员类型
       };
 
       try {
-        const response = await axios.post('/api/register', registrationData);
-        if (response.data.success) {
-          if (response.data.message === 'adminsuccess') {
-            // 设置登录状态和管理员标识
-            localStorage.setItem('logging_status', 1);
-            localStorage.setItem('if_manager', false);
-            // 重定向到 adminmain.vue 页面
-            this.$router.push('/adminmain');
-          } else {
-            // 处理注册成功但不是管理员的情况
-            localStorage.setItem('logging_status', 1);
-            localStorage.setItem('if_manager', false);
-            this.$router.push('/displayall');
+        const response = await axios.get('/api/admin-login', {
+          params: {
+            phone_num: this.phone,
+            password: this.password
           }
+        });
+        if (response.data.message === "adminsuccess") {
+          // 设置管理员标识
+          localStorage.setItem('logging_status', 1);
+          localStorage.setItem('if_manager', true);
+          // 重定向到管理员主页
+          this.$router.push('/adminmain');
+        } else if (response.data.message === "NotExist") {
+          this.showSnackbar('该手机号未注册');
+        } else if (response.data.message === "NoMatch") {
+          this.showSnackbar('密码错误');
         } else {
-          // 处理注册失败的情况
-          console.log('注册失败:', response.data.message);
+          this.showSnackbar('登录失败');
         }
       } catch (error) {
-        console.error('注册请求失败:', error);
+        console.error('登录请求失败:', error);
+        this.showSnackbar('登录请求失败');
       }
     },
-    goToLogin() {
+    goToUserLogin() {
       this.$router.push('/login');
-    },
-    handleImageClick() {
-      this.clickCount++;
-      if (this.clickCount === 12) {
-        this.$router.push('/admin-login');
-        this.clickCount = 0; // 重置点击计数
-      }
     },
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
     },
     onlyNumber(event) {
-      // 限制输入只能为数字
       const charCode = event.which ? event.which : event.keyCode;
       if (charCode > 31 && (charCode < 48 || charCode > 57)) {
         event.preventDefault();
@@ -129,12 +117,15 @@ export default {
     isFormValid() {
       let isValid = true;
 
-      if (!this.rules.phone(this.phone_num)) {
+      if (this.phone.trim() === '') {
+        this.phoneErrors.push('手机号不能为空');
+        isValid = false;
+      } else if (!this.rules.phone(this.phone)) {
         this.phoneErrors.push('手机号必须是11位数字');
         isValid = false;
       }
 
-      if (this.code.trim() === '') {
+      if (this.password.trim() === '') {
         this.passwordErrors.push('密码不能为空');
         isValid = false;
       }
@@ -144,31 +135,30 @@ export default {
     clearErrors() {
       this.phoneErrors = [];
       this.passwordErrors = [];
+    },
+    showSnackbar(message) {
+      this.snackbarMessage = message;
+      this.snackbar = true;
     }
   },
   watch: {
-    clickCount(newCount) {
-      if (newCount > 12) {
-        this.clickCount = 0; // 重置点击计数
-      }
-    },
-    phone_num() {
+    phone() {
       this.phoneErrors = [];
     },
-    code() {
+    password() {
       this.passwordErrors = [];
     }
+  },
+  components: {
+    VSnackbar
   }
 };
 </script>
 
 <style scoped>
-.logo {
-  display: block;
-  margin: 0 auto;
-  max-width: 200px; /* 根据需要调整图片大小 */
-  width: 100%;
-  height: auto;
+.admin-login-container {
+  background-color: #f5f5f5; /* 设置背景为灰色 */
+  min-height: 100vh; /* 使背景颜色覆盖整个页面 */
 }
 
 .button-container {
@@ -186,3 +176,4 @@ v-spacer {
   color: black !important; /* 设置眼睛图标为黑色 */
 }
 </style>
+

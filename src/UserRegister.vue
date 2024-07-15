@@ -92,7 +92,7 @@ export default {
 
       try {
         const response = await axios.post('/api/register', registerData);
-        if (response.data.success === true) {
+        if (response.data.success) {
           // 重定向到 DisplayAll.vue 页面
           this.$router.push('/displayall');
         } else {
@@ -176,4 +176,3 @@ v-spacer {
   color: black !important; /* 设置眼睛图标为黑色 */
 }
 </style>
-
