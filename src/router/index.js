@@ -5,7 +5,9 @@ import UserRegister from '@/UserRegister.vue';
 import UserInfo from '@/UserInfo.vue';
 import UserComments from '@/UserComments.vue';
 import UserPics from '@/UserPics.vue';
-import DisplayAll from '@/DisplayAll.vue';
+import WuMap from '@/WuMap.vue';
+import SearchSpot from '@/SearchSpot.vue';
+import SpotDetail from '@/SpotDetail.vue';
 
 const routes = [
   { path: '/login', component: UserLogin },
@@ -14,8 +16,10 @@ const routes = [
   { path: '/userinfo', component: UserInfo },
   { path: '/usercomments', component: UserComments },
   { path: '/userpics', component: UserPics },
-  { path: '/displayall', component: DisplayAll },
-  { path: '/', redirect: '/login' },
+  { path: '/wumap', component: WuMap },
+  { path: '/searchspot', component: SearchSpot },
+  { path: '/spotdetail', component: SpotDetail },
+  { path: '/', redirect: '/wumap' },
 ];
 
 const router = createRouter({
