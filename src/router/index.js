@@ -19,7 +19,7 @@ const routes = [
   { path: '/wumap', component: WuMap },
   { path: '/searchspot', component: SearchSpot },
   { path: '/spotdetail', component: SpotDetail },
-  { path: '/', redirect: '/wumap' },
+  { path: '/', redirect: '/login' },
 ];
 
 const router = createRouter({
