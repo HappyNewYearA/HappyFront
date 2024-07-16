@@ -5,7 +5,7 @@
       {{ comment.scene }} - {{ comment.user }} - {{ comment.time }}
     </v-card-subtitle>
     <v-card-actions>
-      <v-btn color="red" @click="deleteComment(comment.commentid)">删除</v-btn>
+      <v-btn color="red" @click="deleteComment(comment)">删除</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -19,11 +19,24 @@ export default {
     }
   },
   methods: {
-    async deleteComment(commentid) {
+    async deleteComment(comment) {
       try {
-        // 发送请求到后台删除评论（将display属性设置为0）
-        await fetch(`/api/comments/${commentid}/delete`, { method: 'POST' });
-        this.$emit('deleted', commentid);
+        // 发送请求到后台删除评论（发送五个包）
+        const data = {
+          commentid: comment.commentid,
+          text: comment.text,
+          user: comment.user,
+          scene: comment.scene,
+          time: comment.time
+        };
+        await fetch('/api/comments/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        this.$emit('deleted', comment.commentid);
       } catch (error) {
         console.error('删除评论失败:', error);
       }
@@ -31,4 +44,3 @@ export default {
   }
 };
 </script>
- 

@@ -18,6 +18,7 @@
                 required
                 :counter="20"
                 maxlength="20"
+                :error-messages="nameErrors"
               ></v-text-field>
               <v-text-field
                 v-model="phone_num"
@@ -38,14 +39,13 @@
                 required
                 :counter="20"
                 maxlength="20"
+                :error-messages="codeErrors"
               ></v-text-field>
 
               <div class="button-container">
                 <v-btn @click="goToLogin" color="secondary" dark>返回登录</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn @click="register" color="primary" dark>注册</v-btn>
-                
-                
               </div>
             </v-form>
           </v-card-text>
@@ -67,6 +67,8 @@ export default {
       phone_num: '',
       showPassword: false,
       phoneErrors: [],
+      nameErrors: [],
+      codeErrors: [],
       rules: {
         phone: value => {
           const phoneRegex = /^[0-9]{11}$/;
@@ -122,6 +124,8 @@ export default {
     },
     clearErrors() {
       this.phoneErrors = [];
+      this.nameErrors = [];
+      this.codeErrors = [];
     },
     isFormValid() {
       let isValid = true;
@@ -132,12 +136,12 @@ export default {
       }
 
       if (this.code.trim() === '') {
-        this.phoneErrors.push('密码不能为空');
+        this.codeErrors.push('密码不能为空');
         isValid = false;
       }
 
       if (this.name.trim() === '') {
-        this.phoneErrors.push('昵称不能为空');
+        this.nameErrors.push('昵称不能为空');
         isValid = false;
       }
 
@@ -148,6 +152,14 @@ export default {
     phone_num() {
       // 清除错误提示
       this.phoneErrors = [];
+    },
+    code() {
+      // 清除错误提示
+      this.codeErrors = [];
+    },
+    name() {
+      // 清除错误提示
+      this.nameErrors = [];
     }
   }
 };
@@ -177,3 +189,4 @@ v-spacer {
   color: black !important; /* 设置眼睛图标为黑色 */
 }
 </style>
+

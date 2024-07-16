@@ -14,7 +14,7 @@ import AllPics from '@/AllPics.vue';
 
 const routes = [
   { path: '/login', component: UserLogin },
-  { path: '/admin-login', component: AdminLogin },
+  { path: '/adminlogin', component: AdminLogin },
   { path: '/register', component: UserRegister },
   { path: '/userinfo', component: UserInfo },
   { path: '/usercomments', component: UserComments },
