@@ -1,26 +1,32 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import UserLogin from '@/UserLogin.vue';
-import AdminLogin from '@/AdminLogin.vue';
-import UserRegister from '@/UserRegister.vue';
-import UserInfo from '@/UserInfo.vue';
-import UserComments from '@/UserComments.vue';
-import UserPics from '@/UserPics.vue';
-import DisplayAll from '@/DisplayAll.vue';
+import Vue from 'vue';
+import Router from 'vue-router';
+import AdminMain from '@/components/adminmain.vue';
+import AllComments from '@/components/AllComments.vue';
+import AllPics from '@/components/AllPics.vue';
 
-const routes = [
-  { path: '/login', component: UserLogin },
-  { path: '/admin-login', component: AdminLogin },
-  { path: '/register', component: UserRegister },
-  { path: '/userinfo', component: UserInfo },
-  { path: '/usercomments', component: UserComments },
-  { path: '/userpics', component: UserPics },
-  { path: '/displayall', component: DisplayAll },
-  { path: '/', redirect: '/login' },
-];
+Vue.use(Router);
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes,
+export default new Router({
+  routes: [
+    {
+      path: '/',
+      name: 'AdminMain',
+      component: AdminMain
+    },
+    {
+      path: '/allcomments',
+      name: 'AllComments',
+      component: AllComments
+    },
+    {
+      path: '/allpics',
+      name: 'AllPics',
+      component: AllPics
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: () => import('@/components/Login.vue') // 假设有一个Login.vue页面
+    }
+  ]
 });
-
-export default router;
