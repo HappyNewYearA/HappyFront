@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -42,6 +43,21 @@ export default {
     };
   },
   methods: {
+    async fetchUserInfo(){
+      try {
+        const token = localStorage.getItem('token');
+        
+        const response = await axios.get('api/user/info', {
+          headers : {
+          'Authorization' : `Bearer ${token}`
+        }
+        } );
+        // todo wait backend api
+
+      }catch(error) {
+        console.error('获取用户信息失败',error);
+      }
+    },
     goToUserComments() {
       this.$router.push('/usercomments');
     },

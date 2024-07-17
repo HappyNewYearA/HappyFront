@@ -76,7 +76,7 @@ export default {
       }
 
       const params = {
-        phone_num: this.phone,
+        phone_num: this.phone,  // use phone_num to identify user
         code: this.password,
         logging_status: 1 // 设置登录状态为1
       };
@@ -87,6 +87,11 @@ export default {
           // 设置管理员标识
           localStorage.setItem('logging_status', 1);
           localStorage.setItem('if_manager', false);
+          
+          // get json token from backend
+          const token = response.data.token;
+          localStorage.setItem('token',token);
+
           // 重定向到 WuMap.vue 页面
           this.$router.push('/WuMap');
         } else if (response.data.message === "NotExist") {
