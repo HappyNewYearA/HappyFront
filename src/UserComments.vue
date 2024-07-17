@@ -11,7 +11,7 @@
 
 <script>
 import CommentCard from './components/CommentCard.vue';
-import axios from 'axios';  // 使用 axios 库来从后端获取数据
+import axios from 'axios';
 
 export default {
   components: {

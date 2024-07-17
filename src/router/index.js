@@ -8,6 +8,9 @@ import UserPics from '@/UserPics.vue';
 import WuMap from '@/WuMap.vue';
 import SearchSpot from '@/SearchSpot.vue';
 import SpotDetail from '@/SpotDetail.vue';
+import AdminMain from '@/AdminMain.vue';
+import AllComments from '@/AllComments.vue';
+import AllPics from '@/AllPics.vue';
 
 const routes = [
   { path: '/login', component: UserLogin },
@@ -16,10 +19,13 @@ const routes = [
   { path: '/userinfo', component: UserInfo },
   { path: '/usercomments', component: UserComments },
   { path: '/userpics', component: UserPics },
+  {path:'/adminmain',component:AdminMain},
+  {path:'/allcomments',component:AllComments},
+  {path:'/allpics',component:AllPics},
   { path: '/wumap', component: WuMap },
   { path: '/searchspot', component: SearchSpot },
-  { path: '/spotdetail', component: SpotDetail },
-  { path: '/', redirect: '/wumap' },
+  { path: '/spot/:name', component: SpotDetail },
+  { path: '/', redirect: '/login' },
 ];
 
 const router = createRouter({
@@ -28,3 +34,4 @@ const router = createRouter({
 });
 
 export default router;
+
