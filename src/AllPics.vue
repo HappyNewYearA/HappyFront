@@ -13,7 +13,7 @@
       </div>
     </div>
   </template>
-
+  
   <script>
   import PicCard from '@/components/PicCard.vue';
   
@@ -45,15 +45,16 @@
         this.pics = this.pics.filter(pic => pic.picid !== picid);
       },
       goBack() {
-        this.$router.push('/adminmain');
+        this.$router.push('/admin');
       }
     }
   };
   </script>
-
+  
   <style scoped>
   h1 {
     text-align: center;
     margin-bottom: 20px;
   }
   </style>
+  

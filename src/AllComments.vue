@@ -13,7 +13,7 @@
       </div>
     </div>
   </template>
-
+  
   <script>
   import CommentCard from '@/components/CommentCard.vue';
   
@@ -45,15 +45,16 @@
         this.comments = this.comments.filter(comment => comment.commentid !== commentid);
       },
       goBack() {
-        this.$router.push('/adminmain');
+        this.$router.push('/admin');
       }
     }
   };
   </script>
-
+  
   <style scoped>
   h1 {
     text-align: center;
     margin-bottom: 20px;
   }
   </style>
+  

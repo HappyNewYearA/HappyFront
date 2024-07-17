@@ -24,6 +24,7 @@ const routes = [
   {path:'/allpics',component:AllPics},
   { path: '/wumap', component: WuMap },
   { path: '/searchspot', component: SearchSpot },
+  { path: '/searchspot', component: SearchSpot },
   { path: '/spotdetail', component: SpotDetail },
   { path: '/', redirect: '/login' },
 ];
@@ -34,4 +35,3 @@ const router = createRouter({
 });
 
 export default router;
-
